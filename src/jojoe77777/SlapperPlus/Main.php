@@ -79,8 +79,11 @@ class Main extends PluginBase implements Listener {
         $nbt->setTag(new StringTag("SlapperVersion", $this->getServer()->getPluginManager()->getPlugin("Slapper")->getDescription()->getVersion()));
         if($type === "Human") {
             $player->saveNBT();
-            $nbt->setTag(clone $player->namedtag->Inventory);
-            $nbt->Skin = new CompoundTag("Skin", ["Data" => new StringTag("Data", $player->getSkin()->getSkinData()), "Name" => new StringTag("Name", $player->getSkin()->getSkinId())]);
+            $inventoryTag = $player->namedtag->getListTag("Inventory");
+            assert($inventoryTag !== null);
+            $nbt->setTag(clone $inventoryTag);
+            //$nbt->clone $player->namedtag->Inventory;
+            $nbt->setTag(new CompoundTag("Skin", ["Data" => new StringTag("Data", $player->getSkin()->getSkinData()), "Name" => new StringTag("Name", $player->getSkin()->getSkinId())]));
         }
         $entity = Entity::createEntity("Slapper{$type}", $player->getLevel(), $nbt);
         $entity->setNameTag($name);
