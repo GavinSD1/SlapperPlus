@@ -59,27 +59,27 @@ class Main extends PluginBase implements Listener {
     public function makeSlapper(Player $player, int $type, string $name){
         $type = self::ENTITY_LIST[$type];
         $nbt = new CompoundTag();
-        $nbt->Pos = new ListTag("Pos", [
+        $nbt->setTag(new ListTag("Pos", [
             new DoubleTag("", $player->getX()),
             new DoubleTag("", $player->getY()),
             new DoubleTag("", $player->getZ())
-        ]);
-        $nbt->Motion = new ListTag("Motion", [
+        ]));
+        $nbt->setTag(new ListTag("Motion", [
             new DoubleTag("", 0),
             new DoubleTag("", 0),
             new DoubleTag("", 0)
-        ]);
-        $nbt->Rotation = new ListTag("Rotation", [
+        ]));
+        $nbt->setTag(new ListTag("Rotation", [
             new FloatTag("", $player->getYaw()),
             new FloatTag("", $player->getPitch())
-        ]);
-        $nbt->Health = new ShortTag("Health", 1);
-        $nbt->Commands = new CompoundTag("Commands", []);
-        $nbt->MenuName = new StringTag("MenuName", "");
-        $nbt->SlapperVersion = new StringTag("SlapperVersion", $this->getServer()->getPluginManager()->getPlugin("Slapper")->getDescription()->getVersion());
+        ]));
+        $nbt->setTag(new ShortTag("Health", 1));
+        $nbt->setTag(new CompoundTag("Commands", []));
+        $nbt->setTag(new StringTag("MenuName", ""));
+        $nbt->setTag(new StringTag("SlapperVersion", $this->getServer()->getPluginManager()->getPlugin("Slapper")->getDescription()->getVersion()));
         if($type === "Human") {
             $player->saveNBT();
-            $nbt->Inventory = clone $player->namedtag->Inventory;
+            $nbt->setTag(clone $player->namedtag->Inventory);
             $nbt->Skin = new CompoundTag("Skin", ["Data" => new StringTag("Data", $player->getSkin()->getSkinData()), "Name" => new StringTag("Name", $player->getSkin()->getSkinId())]);
         }
         $entity = Entity::createEntity("Slapper{$type}", $player->getLevel(), $nbt);
